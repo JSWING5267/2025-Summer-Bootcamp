@@ -1,8 +1,8 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Todo from './components/Todo';
-import Blog from './components/Pratice1/Blog';
-import BlogDetail from './components/Pratice1/BlogDetail';
+import Todo from './components/Practice2/Todo';
+import Blog from './components/Practice1/Blog';
+import BlogDetail from './components/Practice1/BlogDetail';
 //import { Suspense, lazy } from 'react';
 
 //const BlogDetail = lazy(() => import('./components/Pratice1/BlogDetail'));
