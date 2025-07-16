@@ -31,12 +31,19 @@ const useThrottle = (callback: () => void, delay: number) => {
 };
 
 function Todo() {
-  const [todos] = useState(todoList);
+  const [todos, setTodos] = useState(todoList);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [visibleCount, setVisibleCount] = useState<number>(8);
   const [scrollCount, setScrollCount] = useState<number>(1);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const handleDelete = (todoToDelete: string) => {
+    const newTodos = todos.filter((todo) => todo !== todoToDelete);
+    setVisibleCount(8);
+    setSearchTerm('');
+    setScrollCount(1);
+    setTodos(newTodos);
+  };
 
   // 디바운싱 미적용
   const filteredTodos = todos.filter((todo) => todo.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -102,17 +109,17 @@ function Todo() {
   }, [throttledScrollHandler]); */
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="bg-slate-100 min-h-screen flex items-start justify-center pt-16 font-sans">
-        <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6 space-y-6">
+      <div className="flex items-start justify-center min-h-screen pt-16 font-sans bg-slate-100">
+        <div className="w-full max-w-md p-6 space-y-6 bg-white shadow-lg rounded-xl">
           <div className="text-center">
             <h2 className="text-3xl font-bold text-slate-800">To-Do List 📝</h2>
           </div>
 
           <div>
             <input
-              className="w-full px-4 py-2 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              className="w-full px-4 py-2 transition-all duration-300 border rounded-lg outline-none text-slate-700 bg-slate-50 border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="검색어 입력..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -126,9 +133,18 @@ function Todo() {
             {visibleTodos.map((todo, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 w-full border-b border-slate-200 last:border-b-0 hover:bg-slate-50 transition-colors duration-200"
+                className="flex items-center justify-between w-full p-4 transition-colors duration-200 border-b border-slate-200 last:border-b-0 hover:bg-slate-50"
               >
-                <span className="text-slate-700">{todo}</span>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-slate-700">{todo}</span>
+                </div>
+                <button className="text-sm text-red-500 hover:text-red-700" onClick={() => handleDelete(todo)}>
+                  삭제
+                </button>
               </div>
             ))}
           </div>
