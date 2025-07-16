@@ -20,6 +20,8 @@ type BlogPost = {
   alt: string;
 };
 
+//const prefetchBlogDetail = () => import('../../components/Practice1/BlogDetail');
+
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   useEffect(() => {
@@ -36,9 +38,13 @@ export default function Blog() {
           const imageUrl =
             photo.urls.raw +
             getImageParameters({
-              w: 800,
-              h: 720,
-              q: 70,
+              w: 3200,
+              h: 2880,
+              q: 100,
+              /*w: 800,
+              h: 600,
+              q: 80,
+              auto: 'format',*/
             });
 
           return {
@@ -50,6 +56,7 @@ export default function Blog() {
         });
 
         setPosts(formattedPosts);
+        //prefetchBlogDetail();
       } catch (error) {
         console.error('Unsplash API에서 이미지를 가져오는 데 실패했습니다.', error);
       }

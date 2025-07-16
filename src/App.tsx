@@ -5,7 +5,7 @@ import Blog from './components/Practice1/Blog';
 import BlogDetail from './components/Practice1/BlogDetail';
 //import { Suspense, lazy } from 'react';
 
-//const BlogDetail = lazy(() => import('./components/Pratice1/BlogDetail'));
+//const BlogDetail = lazy(() => import('./components/Practice1/BlogDetail'));
 
 function App() {
   return (
