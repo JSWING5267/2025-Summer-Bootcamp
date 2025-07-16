@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../Header';
+import Footer from '../Footer';
 import '../../index.css';
 import blogImage1 from '../../img/image1.jpg';
 import blogImage2 from '../../img/image2.jpg';
@@ -10,6 +10,14 @@ import blogImage5 from '../../img/image5.jpg';
 import blogImage6 from '../../img/image6.jpg';
 import { useEffect, useState } from 'react';
 import AuthorProfile from './AuthorProfile';
+
+type BlogPost = {
+  id: string;
+  title: string;
+  image: string;
+  content: string; // 상세 내용 필드를 추가합니다.
+  alt: string;
+};
 
 const blogPosts = [
   { id: 1, title: '블로그 글 1', image: blogImage1, content: '이것은 블로그 글 1의 상세 내용입니다.' },
@@ -61,10 +69,42 @@ function slowTagAnalysis(tags: string[]) {
 
 export default function BlogDetail() {
   const { id } = useParams<{ id: string }>();
-  const postId = id ? parseInt(id, 10) : NaN;
-  const post = blogPosts.find((item) => item.id === postId);
+
+  const [post, setPost] = useState<BlogPost | null>(null);
 
   const [result, setResult] = useState<{ tag: string; count: number; time: number } | null>(null);
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+
+    const fetchPostDetail = async () => {
+      const accessKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
+      const url = `https://api.unsplash.com/photos/${id}?client_id=${accessKey}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('포스트를 불러오는 데 실패했습니다.');
+        }
+        const data = await response.json();
+
+        setPost({
+          id: data.id,
+          title: data.description || data.alt_description || '제목 없음',
+          image: data.urls.regular,
+          content: `이 이미지는 ${data.user.name}님이 촬영했으며, ${data.likes}개의 '좋아요'를 받았습니다. 이미지에 대한 설명은 "${data.alt_description}"입니다.`,
+          alt: data.alt_description,
+        });
+      } catch (error) {
+        console.error(error);
+        setPost(null);
+      }
+    };
+
+    fetchPostDetail();
+  }, [id]);
 
   useEffect(() => {
     const generateTagData = (count: number): string[] => {
@@ -107,7 +147,7 @@ export default function BlogDetail() {
         </Link>
 
         <div className="shadow-lg rounded-lg overflow-hidden mb-6">
-          <img src={post.image} alt={post.title} className="w-full h-[400px] object-cover" />
+          <img src={post.image} alt={post.alt} className="w-full h-auto max-h-[500px] object-cover" />
         </div>
 
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>

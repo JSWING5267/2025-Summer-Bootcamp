@@ -36,6 +36,7 @@ greet();
             }: React.ComponentPropsWithoutRef<'code'> & { inline?: boolean }) {
               const match = /language-(\w+)/.exec(className || '');
               return !inline && match ? (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 <SyntaxHighlighter style={oneDark as any} language={match[1]} PreTag="div" {...props}>
                   {String(children).replace(/\n$/, '')}
                 </SyntaxHighlighter>
