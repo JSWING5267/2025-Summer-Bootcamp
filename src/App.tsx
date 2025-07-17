@@ -30,7 +30,7 @@ function App() {
           path="/blog/:id"
           element={
             //<Suspense fallback={<div>Loading...</div>}>
-            <BlogDetail />
+              <BlogDetail />
             //</Suspense>
           }
         />

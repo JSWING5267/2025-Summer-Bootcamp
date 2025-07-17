@@ -65,18 +65,18 @@ export default function Blog() {
     fetchUnsplashImages();
   }, []);
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-4">최신 블로그 글</h1>
+      <main className="container flex-grow px-4 py-8 mx-auto">
+        <h1 className="mb-4 text-3xl font-bold">최신 블로그 글</h1>
         {posts.length === 0 ? (
           <p>이미지를 불러오는 중입니다...</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2">
             {posts.map((post) => (
               <Link to={`/blog/${post.id}`} key={post.id} className="block group">
-                <div className="shadow-lg hover:shadow-2xl transition rounded-lg overflow-hidden">
+                <div className="overflow-hidden transition rounded-lg shadow-lg hover:shadow-2xl">
                   <img
                     src={post.image}
                     alt={post.alt}

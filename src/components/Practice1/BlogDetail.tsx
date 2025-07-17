@@ -9,29 +9,28 @@ type BlogPost = {
   id: string;
   title: string;
   image: string;
-  content: string; // 상세 내용 필드를 추가합니다.
+  content: string;
   alt: string;
 };
 
 function slowTagAnalysis(tags: string[]) {
-  const uniqueTags = Array.from(new Set(tags));
   let mostFrequent = '';
   let maxCount = 0;
 
-  uniqueTags.forEach((tag) => {
-    const count = tags.filter((t) => t === tag).length;
+  for (let i = 0; i < tags.length; i++) {
+    let count = 0;
 
-    const _ = tag.split('').reverse().join('').toUpperCase();
-    console.log(_);
+    for (let j = 0; j < tags.length; j++) {
+      if (tags[i] === tags[j]) {
+        count++;
+      }
+    }
 
     if (count > maxCount) {
       maxCount = count;
-      mostFrequent = tag;
+      mostFrequent = tags[i];
     }
-  });
-
-  const sorted = [...uniqueTags].sort((a, b) => a.localeCompare(b));
-  console.log(sorted);
+  }
 
   return { tag: mostFrequent, count: maxCount };
 }
@@ -94,14 +93,17 @@ export default function BlogDetail() {
   useEffect(() => {
     const generateTagData = (count: number): string[] => {
       const sampleTags = ['react', 'javascript', 'css', 'html', 'node', 'typescript'];
-      const tags: string[] = [];
+      const tags = new Array(count);
+      const sampleLength = sampleTags.length;
+
       for (let i = 0; i < count; i++) {
-        tags.push(sampleTags[Math.floor(Math.random() * sampleTags.length)]);
+        tags[i] = sampleTags[(Math.random() * sampleLength) | 0];
       }
+
       return tags;
     };
 
-    const tags = generateTagData(5000000);
+    const tags = generateTagData(50000);
 
     const t1 = performance.now();
     const analysisResult = slowTagAnalysis(tags);
@@ -116,28 +118,28 @@ export default function BlogDetail() {
 
   if (!post) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-2xl">해당 글을 찾을 수 없습니다.</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Header />
 
-      <div className="flex-grow container mx-auto px-4 py-8">
-        <Link to="/blog" className="text-blue-500 hover:underline mb-4 inline-block">
+      <div className="container flex-grow px-4 py-8 mx-auto">
+        <Link to="/blog" className="inline-block mb-4 text-blue-500 hover:underline">
           ← 목록으로 돌아가기
         </Link>
 
-        <div className="shadow-lg rounded-lg overflow-hidden mb-6">
+        <div className="mb-6 overflow-hidden rounded-lg shadow-lg">
           <img src={post.image} alt={post.alt} className="w-full h-auto max-h-[500px] object-cover" />
         </div>
 
-        <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
-        <p className="text-lg leading-relaxed mb-4">{post.content}</p>
-        <div className="bg-gray-100 p-4 rounded-lg text-sm mb-10">
+        <h1 className="mb-4 text-3xl font-bold">{post.title}</h1>
+        <p className="mb-4 text-lg leading-relaxed">{post.content}</p>
+        <div className="p-4 mb-10 text-sm bg-gray-100 rounded-lg">
           <div className="mb-2 font-semibold">분석 결과</div>
           <div>가장 많은 태그: {result?.tag}</div>
           <div>개수: {result?.count}</div>

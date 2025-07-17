@@ -1,4 +1,4 @@
-import { useState, Suspense } from 'react';
+import { useState } from 'react';
 import Modal from './BlogModal';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -52,7 +52,7 @@ greet();
         </ReactMarkdown>
         <button
           onClick={() => setIsModalOpen(false)}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
+          className="px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
         >
           닫기
         </button>
